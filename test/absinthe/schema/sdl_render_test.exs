@@ -285,13 +285,6 @@ defmodule Absinthe.Schema.SdlRenderTest do
              """
   end
 
-  defmodule TestModifier do
-    def pipeline(pipeline, opts) do
-      send(self(), type: :module, opts: opts)
-      pipeline
-    end
-  end
-
   defmodule ModifiedTestSchema do
     use Absinthe.Schema
 
@@ -315,5 +308,12 @@ defmodule Absinthe.Schema.SdlRenderTest do
     Absinthe.Schema.to_sdl(ModifiedTestSchema, sdl_render: true)
     assert_received type: :function, opts: [sdl_render: true]
     assert_received type: :module, opts: [sdl_render: true]
+  end
+
+  defmodule TestModifier do
+    def pipeline(pipeline, opts) do
+      send(self(), type: :module, opts: opts)
+      pipeline
+    end
   end
 end
